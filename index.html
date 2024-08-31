@@ -1,128 +1,164 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
-  <title>Combobox em Cascata com Link</title>
-  <style>
-    body {
-      height: 100vh;
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      display: grid;
-      place-items: center;
-      background-color: #4065b8;
-      color: white;
-    }
-    .container {
-      display: flex;
-      flex-direction: column;
-      width: 300px;
-    }
-    select, button {
-      margin: 10px 0;
-      padding: 10px;
-      font-size: 16px;
-    }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-    } 
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+    <title>Combobox em Cascata com Link</title>
+    <style>
+        body {
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: grid;
+            place-items: center;
+            background-color: #4065b8;
+            color: white;
+        }
 
-    #linkButtonCadastro{
-      background-color: #0480e2;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+        }
 
-    img{
-        height: 150px;
-        width: 150px;
-        margin-bottom: 40px;
-        margin-left: 70px;
-    }
-  </style>
+        select,
+        button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #linkButtonCadastro {
+            background-color: #0480e2;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        img {
+            height: 150px;
+            width: 150px;
+            margin-bottom: 40px;
+            margin-left: 70px;
+        }
+
+        .hidden {
+            opacity: 0;
+            filter: blur(15px);
+            transform: translateX(-100%);
+            transition: all 2s;
+        }
+
+        .show {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateZ(0);
+            transition: all 2s;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="container">
+    <div class="container hidden">
         <img src="/img/logo.png" alt="logo">
-    <label for="uf">UF:</label>
-    <select id="uf">
-      <option value="">Select UF</option>
-    </select>
-    
-    <label for="cidade">Cidade:</label>
-    <select id="cidade">
-      <option value="">Select Cidade</option>
-    </select>
-    
-    <button id="linkButton" style="display:none;">Agendar</button>
-    <button id="linkButtonCadastro" style="display:none;">Cadastrar</button>
-  </div>
+        <label for="uf">UF:</label>
+        <select id="uf">
+            <option value="">Select UF</option>
+        </select>
 
-  <script>
+        <label for="cidade">Cidade:</label>
+        <select id="cidade">
+            <option value="">Select Cidade</option>
+        </select>
 
-    function loadData() {
-      fetch('https://script.google.com/macros/s/AKfycbzxhPpN-eOOykPxGtqSCfv9bgJ186QL6or1Qox7Yv47HaSlQFhS5MXiV4ekQ9fTkAy3/exec')
-        .then(response => response.json())
-        .then(data => {
-          var ufSelect = document.getElementById('uf');
-          var cidadeSelect = document.getElementById('cidade');
+        <button id="linkButton" style="display:none;">Agendar</button>
+        <button id="linkButtonCadastro" style="display:none;">Cadastrar</button>
+    </div>
 
-          var ufs = [...new Set(data.saida.map(row => row[0]))]; 
-          ufs.forEach(function(uf) {
-            var option = document.createElement('option');
-            option.value = uf;
-            option.text = uf;
-            ufSelect.appendChild(option);
-          });
-
-          ufSelect.onchange = function() {
-            var selectedUF = ufSelect.value;
-            cidadeSelect.innerHTML = '<option value="">Select Cidade</option>';
-            var cidades = data.saida.filter(row => row[0] === selectedUF).map(row => row[1]); 
-            cidades.forEach(function(cidade) {
-              var option = document.createElement('option');
-              option.value = cidade;
-              option.text = cidade;
-              cidadeSelect.appendChild(option);
-            });
-          };
-
-          cidadeSelect.onchange = function() {
-            var selectedCidade = cidadeSelect.value;
-            var selectedRow = data.saida.find(row => row[1] === selectedCidade); 
-            var linkAgenda = selectedRow[2];
-            var linkCcadastro = selectedRow[3];
-
-            // Certifique-se de que o link é absoluto
-            if (!/^https?:\/\//i.test(linkAgenda)) {
-                linkAgenda = 'http://' + linkAgenda; // Adiciona "http://" se estiver faltando
-            }
-
-            document.getElementById('linkButton').onclick = function() {
-              window.open(linkAgenda, '_blank'); 
-            };
-
-            if (!/^https?:\/\//i.test(linkCcadastro)) {
-                linkCcadastro = 'http://' + linkCcadastro; // Adiciona "http://" se estiver faltando
-            }
-
-            document.getElementById('linkButtonCadastro').onclick = function() {
-              window.open(linkCcadastro, '_blank'); 
-            };
-            document.getElementById('linkButton').style.display = 'block';
-            document.getElementById('linkButtonCadastro').style.display = 'block';
-          };
-
+    <script>
+        const myObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show')
+                } else {
+                    entry.target.classList.add('hidden')
+                }
+            })
         })
-        .catch(error => console.error('Erro ao carregar dados:', error));
-    }
+        const elements = document.querySelectorAll('.hidden')
 
-    window.onload = loadData;
-  </script>
+        elements.forEach((element) => {
+            myObserver.observe(element)
+        })
+
+        
+        function loadData() {
+            fetch('https://script.google.com/macros/s/AKfycbzxhPpN-eOOykPxGtqSCfv9bgJ186QL6or1Qox7Yv47HaSlQFhS5MXiV4ekQ9fTkAy3/exec')
+                .then(response => response.json())
+                .then(data => {
+                    var ufSelect = document.getElementById('uf');
+                    var cidadeSelect = document.getElementById('cidade');
+
+                    var ufs = [...new Set(data.saida.map(row => row[0]))];
+                    ufs.forEach(function (uf) {
+                        var option = document.createElement('option');
+                        option.value = uf;
+                        option.text = uf;
+                        ufSelect.appendChild(option);
+                    });
+
+                    ufSelect.onchange = function () {
+                        var selectedUF = ufSelect.value;
+                        cidadeSelect.innerHTML = '<option value="">Select Cidade</option>';
+                        var cidades = data.saida.filter(row => row[0] === selectedUF).map(row => row[1]);
+                        cidades.forEach(function (cidade) {
+                            var option = document.createElement('option');
+                            option.value = cidade;
+                            option.text = cidade;
+                            cidadeSelect.appendChild(option);
+                        });
+                    };
+
+                    cidadeSelect.onchange = function () {
+                        var selectedCidade = cidadeSelect.value;
+                        var selectedRow = data.saida.find(row => row[1] === selectedCidade);
+                        var linkAgenda = selectedRow[2];
+                        var linkCcadastro = selectedRow[3];
+
+                        // Certifique-se de que o link é absoluto
+                        if (!/^https?:\/\//i.test(linkAgenda)) {
+                            linkAgenda = 'http://' + linkAgenda; // Adiciona "http://" se estiver faltando
+                        }
+
+                        document.getElementById('linkButton').onclick = function () {
+                            window.open(linkAgenda, '_blank');
+                        };
+
+                        if (!/^https?:\/\//i.test(linkCcadastro)) {
+                            linkCcadastro = 'http://' + linkCcadastro; // Adiciona "http://" se estiver faltando
+                        }
+
+                        document.getElementById('linkButtonCadastro').onclick = function () {
+                            window.open(linkCcadastro, '_blank');
+                        };
+                        document.getElementById('linkButton').style.display = 'block';
+                        document.getElementById('linkButtonCadastro').style.display = 'block';
+                    };
+
+                })
+                .catch(error => console.error('Erro ao carregar dados:', error));
+        }
+
+        window.onload = loadData;
+    </script>
 </body>
+
 </html>
