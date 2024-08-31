@@ -46,8 +46,6 @@
         img {
             height: 150px;
             width: 150px;
-            margin-bottom: 40px;
-            margin-left: 70px;
         }
 
         .hidden {
@@ -63,12 +61,20 @@
             transform: translateZ(0);
             transition: all 2s;
         }
+
+        .container div{
+            display: grid;
+            place-items: center;
+        }
     </style>
 </head>
 
 <body>
     <div class="container hidden">
-        <img src="/img/logo.png" alt="logo">
+        <div>
+            <img src="/img/logo.png" alt="logo">
+            <h1>Mais Coração</h1>
+        </div>
         <label for="uf">UF:</label>
         <select id="uf">
             <option value="">Select UF</option>
