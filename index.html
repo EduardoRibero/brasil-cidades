@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Combobox em Cascata com Link</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      display: grid;
+      place-items: center;
+      background-color: #4065b8;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      width: 300px;
+    }
+    select, button {
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <label for="uf">UF:</label>
+    <select id="uf">
+      <option value="">Select UF</option>
+    </select>
+    
+    <label for="cidade">Cidade:</label>
+    <select id="cidade">
+      <option value="">Select Cidade</option>
+    </select>
+    
+    <button id="linkButton" style="display:none;">Abrir Link</button>
+  </div>
+
+  <script>
+    function loadData() {
+      fetch('https://script.google.com/macros/s/AKfycbw0kCnxvFFprIIbjtC_dSeVYsyUvoZRSRmDvQ9PgGq9796ajJ8DLy9AgsnEwlmiSPB-bw/exec')
+        .then(response => response.json())
+        .then(data => {
+          var ufSelect = document.getElementById('uf');
+          var cidadeSelect = document.getElementById('cidade');
+
+          var ufs = [...new Set(data.map(row => row[0]))]; 
+          ufs.forEach(function(uf) {
+            var option = document.createElement('option');
+            option.value = uf;
+            option.text = uf;
+            ufSelect.appendChild(option);
+          });
+
+          ufSelect.onchange = function() {
+            var selectedUF = ufSelect.value;
+            cidadeSelect.innerHTML = '<option value="">Select Cidade</option>';
+            var cidades = data.filter(row => row[0] === selectedUF).map(row => row[1]); 
+            cidades.forEach(function(cidade) {
+              var option = document.createElement('option');
+              option.value = cidade;
+              option.text = cidade;
+              cidadeSelect.appendChild(option);
+            });
+          };
+
+          cidadeSelect.onchange = function() {
+            var selectedCidade = cidadeSelect.value;
+            var selectedRow = data.find(row => row[1] === selectedCidade); 
+            var link = selectedRow[2];
+
+            // Certifique-se de que o link é absoluto
+            if (!/^https?:\/\//i.test(link)) {
+              link = 'http://' + link; // Adiciona "http://" se estiver faltando
+            }
+
+            document.getElementById('linkButton').onclick = function() {
+              window.open(link, '_blank'); 
+            };
+            document.getElementById('linkButton').style.display = 'block';
+          };
+        })
+        .catch(error => console.error('Erro ao carregar dados:', error));
+    }
+
+    window.onload = loadData;
+  </script>
+</body>
+</html>
