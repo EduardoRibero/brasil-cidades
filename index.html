@@ -5,6 +5,7 @@
   <title>Combobox em Cascata com Link</title>
   <style>
     body {
+      height: 100vh;
       font-family: Arial, sans-serif;
       margin: 20px;
       display: grid;
@@ -42,6 +43,7 @@
     </select>
     
     <button id="linkButton" style="display:none;">Agendar</button>
+    <button id="linkButtonCadastro" style="display:none;">Cadastrar</button>
   </div>
 
   <script>
@@ -75,18 +77,29 @@
           cidadeSelect.onchange = function() {
             var selectedCidade = cidadeSelect.value;
             var selectedRow = data.saida.find(row => row[1] === selectedCidade); 
-            var link = selectedRow[2];
+            var linkAgenda = selectedRow[2];
+            var linkCcadastro = selectedRow[3];
 
             // Certifique-se de que o link é absoluto
-            if (!/^https?:\/\//i.test(link)) {
-              link = 'http://' + link; // Adiciona "http://" se estiver faltando
+            if (!/^https?:\/\//i.test(linkAgenda)) {
+                linkAgenda = 'http://' + linkAgenda; // Adiciona "http://" se estiver faltando
             }
 
             document.getElementById('linkButton').onclick = function() {
-              window.open(link, '_blank'); 
+              window.open(linkAgenda, '_blank'); 
+            };
+
+            if (!/^https?:\/\//i.test(linkCcadastro)) {
+                linkCcadastro = 'http://' + linkCcadastro; // Adiciona "http://" se estiver faltando
+            }
+
+            document.getElementById('linkButtonCadastro').onclick = function() {
+              window.open(linkCcadastro, '_blank'); 
             };
             document.getElementById('linkButton').style.display = 'block';
+            document.getElementById('linkButtonCadastro').style.display = 'block';
           };
+
         })
         .catch(error => console.error('Erro ao carregar dados:', error));
     }
