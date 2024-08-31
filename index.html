@@ -41,18 +41,18 @@
       <option value="">Select Cidade</option>
     </select>
     
-    <button id="linkButton" style="display:none;">Abrir Link</button>
+    <button id="linkButton" style="display:none;">Agendar</button>
   </div>
 
   <script>
     function loadData() {
-      fetch('https://script.google.com/macros/s/AKfycbw0kCnxvFFprIIbjtC_dSeVYsyUvoZRSRmDvQ9PgGq9796ajJ8DLy9AgsnEwlmiSPB-bw/exec')
+      fetch('https://script.google.com/macros/s/AKfycbzxhPpN-eOOykPxGtqSCfv9bgJ186QL6or1Qox7Yv47HaSlQFhS5MXiV4ekQ9fTkAy3/exec')
         .then(response => response.json())
         .then(data => {
           var ufSelect = document.getElementById('uf');
           var cidadeSelect = document.getElementById('cidade');
 
-          var ufs = [...new Set(data.map(row => row[0]))]; 
+          var ufs = [...new Set(data.saida.map(row => row[0]))]; 
           ufs.forEach(function(uf) {
             var option = document.createElement('option');
             option.value = uf;
@@ -63,7 +63,7 @@
           ufSelect.onchange = function() {
             var selectedUF = ufSelect.value;
             cidadeSelect.innerHTML = '<option value="">Select Cidade</option>';
-            var cidades = data.filter(row => row[0] === selectedUF).map(row => row[1]); 
+            var cidades = data.saida.filter(row => row[0] === selectedUF).map(row => row[1]); 
             cidades.forEach(function(cidade) {
               var option = document.createElement('option');
               option.value = cidade;
@@ -74,7 +74,7 @@
 
           cidadeSelect.onchange = function() {
             var selectedCidade = cidadeSelect.value;
-            var selectedRow = data.find(row => row[1] === selectedCidade); 
+            var selectedRow = data.saida.find(row => row[1] === selectedCidade); 
             var link = selectedRow[2];
 
             // Certifique-se de que o link é absoluto
