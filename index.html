@@ -67,6 +67,29 @@
             display: grid;
             place-items: center;
         }
+
+        .conteinerBtnVoltar{
+            align-items: center;
+
+            .botaoVoltar{
+                background-color: aliceblue;
+                min-width: 100%;
+                margin-top: 10px;
+                padding: 0;
+                
+                a{
+                    text-align: center;
+                    min-width: 100%;
+                    min-height: 100%;
+                    padding: 10px;
+                    text-decoration: none;
+                    color: black;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+        }
     </style>
 </head>
 
@@ -88,6 +111,11 @@
 
         <button id="linkButton" style="display:none;">Agendar</button>
         <button id="linkButtonCadastro" style="display:none;">Cadastrar</button>
+        <div class="conteinerBtnVoltar">
+            <div class="botaoVoltar">
+                <a href="https://maiscoracao.com.br/">Voltar</a>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -139,6 +167,7 @@
                         var selectedRow = data.saida.find(row => row[1] === selectedCidade);
                         var linkAgenda = selectedRow[2];
                         var linkCcadastro = selectedRow[3];
+                        var LinkVoltar = "https://maiscoracao.com.br/"
 
                         // Certifique-se de que o link é absoluto
                         if (!/^https?:\/\//i.test(linkAgenda)) {
@@ -150,7 +179,7 @@
                         };
 
                         if (!/^https?:\/\//i.test(linkCcadastro)) {
-                            linkCcadastro = 'http://' + linkCcadastro; // Adiciona "http://" se estiver faltando
+                            linkCcadastro = 'http://' + linkCcadastro; 
                         }
 
                         document.getElementById('linkButtonCadastro').onclick = function () {
