@@ -46,26 +46,71 @@ function loadData() {
                 var selectedRow = data.saida.find(row => row[1] === selectedCidade);
                 var linkAgenda = selectedRow[2];
                 var linkCcadastro = selectedRow[3];
-                var LinkVoltar = "https://maiscoracao.com.br/"
 
-                // Certifique-se de que o link é absoluto
-                if (!/^https?:\/\//i.test(linkAgenda)) {
-                    linkAgenda = 'http://' + linkAgenda; // Adiciona "http://" se estiver faltando
+                if(selectedCidade == 'Florianópolis'){
+                    document.getElementById('lbl-unidades').style.display = 'block';
+                    let selectUnidade = document.getElementById('unidades')
+                    selectUnidade.style.display = 'block';
+
+                    fetch('https://script.google.com/macros/s/AKfycbyrFosCZMzLE56jFnhOfp1oat570uGK8McLJINdowzQKeVvp5NWXDtGlpUisxljX87I/exec')
+                    .then((response)=> response.json())
+                    .then((data) =>{
+
+                        let unidades = [...new Set(data.saida.map(row => row[0]))];
+                        unidades.forEach((unidade) => {
+                            let option = document.createElement('option')
+                            option.value = unidade
+                            option.text = unidade
+
+                            selectUnidade.appendChild(option)
+                        })
+
+                        selectUnidade.onchange = function () {
+                            let linkagendar = [...new Set(data.saida.map(row => row[1]))]
+                            if (!/^https?:\/\//i.test(linkagendar)) {
+                                linkagendar = 'http://' + linkagendar; 
+                            }
+            
+                            document.getElementById('linkButton').onclick = function () {
+                                window.open(linkagendar, '_blank');
+                            }
+
+                            let linkCadastrar = [...new Set(data.saida.map(row => row[2]))]
+                            if (!/^https?:\/\//i.test(linkCadastrar)) {
+                                linkCadastrar = 'http://' + linkCadastrar; 
+                            }
+            
+                            document.getElementById('linkButtonCadastro').onclick = function () {
+                                window.open(linkCadastrar, '_blank');
+                            }
+                            document.getElementById('linkButton').style.display = 'block';
+                            document.getElementById('linkButtonCadastro').style.display = 'block';
+                        }
+                    })
+                }else{
+                    document.getElementById('lbl-unidades').style.display = 'none';
+                    document.getElementById('unidades').style.display = 'none';
+
+                    if (!/^https?:\/\//i.test(linkAgenda)) {
+                        linkAgenda = 'http://' + linkAgenda; 
+                    }
+    
+                    document.getElementById('linkButton').onclick = function () {
+                        window.open(linkAgenda, '_blank');
+                    };
+    
+                    if (!/^https?:\/\//i.test(linkCcadastro)) {
+                        linkCcadastro = 'http://' + linkCcadastro;
+                    }
+    
+                    document.getElementById('linkButtonCadastro').onclick = function () {
+                        window.open(linkCcadastro, '_blank');
+                    };
+
+                    document.getElementById('linkButton').style.display = 'block';
+                    document.getElementById('linkButtonCadastro').style.display = 'block';
                 }
 
-                document.getElementById('linkButton').onclick = function () {
-                    window.open(linkAgenda, '_blank');
-                };
-
-                if (!/^https?:\/\//i.test(linkCcadastro)) {
-                    linkCcadastro = 'http://' + linkCcadastro; 
-                }
-
-                document.getElementById('linkButtonCadastro').onclick = function () {
-                    window.open(linkCcadastro, '_blank');
-                };
-                document.getElementById('linkButton').style.display = 'block';
-                document.getElementById('linkButtonCadastro').style.display = 'block';
             };
 
         })

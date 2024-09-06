@@ -21,6 +21,10 @@
      justify-content: center;
  }
 
+ #unidades, #lbl-unidades{
+    display: none;
+ }
+
  select,
  button {
      margin: 10px 0;
