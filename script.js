@@ -48,9 +48,9 @@ function loadData() {
                 var linkCcadastro = selectedRow[3];
                 var LinkVoltar = "https://maiscoracao.com.br/"
 
-                // Certifique-se de que o link é absoluto
+                
                 if (!/^https?:\/\//i.test(linkAgenda)) {
-                    linkAgenda = 'http://' + linkAgenda; // Adiciona "http://" se estiver faltando
+                    linkAgenda = 'http://' + linkAgenda; 
                 }
 
                 document.getElementById('linkButton').onclick = function () {
@@ -58,14 +58,21 @@ function loadData() {
                 };
 
                 if (!/^https?:\/\//i.test(linkCcadastro)) {
-                    linkCcadastro = 'http://' + linkCcadastro; 
+                    linkCcadastro = 'http://' + linkCcadastro;
                 }
 
                 document.getElementById('linkButtonCadastro').onclick = function () {
                     window.open(linkCcadastro, '_blank');
                 };
-                document.getElementById('linkButton').style.display = 'block';
-                document.getElementById('linkButtonCadastro').style.display = 'block';
+
+                if(selectedCidade == 'Florianópolis'){
+                    document.getElementById('lbl-unidades').style.display = 'block';
+                    document.getElementById('unidades').style.display = 'block';
+                }else{
+                    document.getElementById('linkButton').style.display = 'block';
+                    document.getElementById('linkButtonCadastro').style.display = 'block';
+                }
+
             };
 
         })
