@@ -31,6 +31,10 @@ function loadData() {
 
             ufSelect.onchange = function () {
                 var selectedUF = ufSelect.value;
+                if(selectedUF != 'SC'){
+                    document.getElementById('lbl-unidades').style.display = 'none';
+                    document.getElementById('unidades').style.display = 'none';
+                }
                 cidadeSelect.innerHTML = '<option value="">Select Cidade</option>';
                 var cidades = data.saida.filter(row => row[0] === selectedUF).map(row => row[1]);
                 cidades.forEach(function (cidade) {
